@@ -11,7 +11,7 @@ public class IncidentMapper {
         inc.number = ExcelUtils.canonical(row.get(MasterData.COL_NUMBER));
         inc.applicationSpecificInfo = aresNormalization(ExcelUtils.canonical(row.get(MasterData.COL_APP_INFO)));
         inc.opened = row.get(MasterData.COL_OPENED);
-        inc.openedBy = ExcelUtils.canonical(row.get(MasterData.COL_OPENED_BY));
+        inc.openedBy = removeParentheses(ExcelUtils.canonical(row.get(MasterData.COL_OPENED_BY)));
         inc.updated = row.get(MasterData.COL_UPDATED);
         inc.priority = ExcelUtils.canonical(row.get(MasterData.COL_INCIDENT_PRIORITY));
         inc.shortDescription = ExcelUtils.canonical(row.get(MasterData.COL_SHORT_DESC));
@@ -74,12 +74,17 @@ public class IncidentMapper {
 
         }
     }
-    public String removeParentheses(String openedBy) {
-return "olá";
-    }
+        public String removeParentheses (String openedBy){
+            if (openedBy == null || openedBy.isEmpty()) {
+                return "";
+            }
+            // O regex "\\s*\\(.*?\\)" significa:
+            // \\s*    -> Encontra zero ou mais espaços antes do parênteses
+            // \\(     -> Encontra o caractere literal '('
+            // .*?     -> Encontra qualquer caractere dentro (de forma não ambiciosa)
+            // \\)     -> Encontra o caractere literal ')'
+            return openedBy.replaceAll("\\s*\\(.*?\\)", "").trim();
+        }
+
 
 }
-
-
-
-
