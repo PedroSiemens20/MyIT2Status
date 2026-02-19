@@ -16,6 +16,8 @@ public class MainApp {
     private LogGui gui;
 
     public static void main(String[] args) {
+
+
         SwingUtilities.invokeLater(() -> {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -92,6 +94,7 @@ public class MainApp {
     }
 
     private boolean isIdentical(Incident n, Incident s) {
+
         return Objects.equals(n.state, s.state) &&
                 Objects.equals(ExcelUtils.canonical(n.priority), ExcelUtils.canonical(s.priority));
                 //Objects.equals(ExcelUtils.canonical(n.applicationSpecificInfo), ExcelUtils.canonical(s.applicationSpecificInfo));

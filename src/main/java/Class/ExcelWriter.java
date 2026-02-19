@@ -2,6 +2,7 @@ package Class;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
+
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.util.Date;
@@ -46,9 +47,41 @@ public class ExcelWriter {
             writeCell(row, 12, inc.opened, dateStyle);        // Created
             writeCell(row, 13, inc.priority, null);           // Priority
             writeCell(row, 14, inc.state, null);              // Status
-            writeCell(row, 16, inc.description, null);        // Comments
+            writeCell(row, 17, inc.description, null);        // Comments
+
+
+            if (inc.applicationSpecificInfo.equals(MasterData.NEW_ARE_SRE))
+                writeCell(row, 18, "x", null);
+
+            if (inc.applicationSpecificInfo.equals(MasterData.NEW_ARE_BUZ))
+                writeCell(row, 19, "x", null);
+
+            List<String> ignoreNumbers = ignoreNumbers();
+            if(ignoreNumbers.contains(inc.number))
+                writeCell(row, 20, "Ignore", null);
+
         }
+
+
+
     }
+
+    public List<String> ignoreNumbers() {
+        return List.of(
+                "INC44557114",
+                "INC44542910",
+                "INC44514794",
+                "INC44497998",
+                "INC44475191",
+                "INC44301197",
+                "INC44247133",
+                "INC44233598",
+                "INC43708822",
+                "INC44567943"
+        );
+    }
+
+
 
     private void writeHeader(XSSFWorkbook wb, Sheet sheet) {
         Row row = sheet.createRow(0);
