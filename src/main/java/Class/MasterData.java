@@ -77,6 +77,7 @@ public class MasterData {
     public static final String ARE_0000 = "0000 - Placeholder for all not listed ARE";
     public static final String ARE_SRE = "SRE Siemens Real Estate";
     public static final String ARE_SIB = "SIB - Sibiu";
+    public static final String ARE_RCDK = "RCDK - Region Denmark";
 
 
 

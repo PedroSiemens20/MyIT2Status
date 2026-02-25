@@ -59,7 +59,7 @@ public class IncidentMapper {
             case MasterData.ARE_BUZ, MasterData.ARE_ORA, MasterData.ARE_SIB:
                 return MasterData.NEW_ARE_BUZ;
 
-            case MasterData.ARE_SMO_DK:
+            case MasterData.ARE_SMO_DK, MasterData.ARE_RCDK :
                 return MasterData.NEW_ARE_SMO_DK;
 
             // 3368

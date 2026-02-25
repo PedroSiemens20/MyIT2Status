@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.List;
+import java.util.Comparator; // Adicione este import
 
 public class ExcelWriter {
 
@@ -30,6 +31,12 @@ public class ExcelWriter {
     }
 
     private void createSheet(XSSFWorkbook wb, String name, List<Incident> data) {
+        // 1. Ordenar os dados antes de escrever (Do mais antigo para o mais novo)
+        data.sort(Comparator.comparing(inc -> {
+            Date d = ExcelUtils.extractDate(inc.opened);
+            return d != null ? d : new Date(0); // Se a data for nula, joga para o topo (muito antigo)
+        }));
+
         XSSFSheet sheet = wb.createSheet(name);
         writeHeader(wb, sheet);
 
@@ -38,32 +45,29 @@ public class ExcelWriter {
 
         int rowIdx = 1;
         for (Incident inc : data) {
-            Row row = sheet.createRow(rowIdx++);
-            // Mapping based on MasterData.STATUS_HEADERS order
-            writeCell(row, 1, inc.number, null);              // Incident (ID)
-            writeCell(row, 8, inc.openedBy, null);            // Reported By
-            writeCell(row, 9, inc.shortDescription, null);    // Description
-            writeCell(row, 11, inc.applicationSpecificInfo, null); // ARE
-            writeCell(row, 12, inc.opened, dateStyle);        // Created
-            writeCell(row, 13, inc.priority, null);           // Priority
-            writeCell(row, 14, inc.state, null);              // Status
-            writeCell(row, 17, inc.description, null);        // Comments
 
+            if (!ignoreNumbers().contains(inc.number)) {
+                Row row = sheet.createRow(rowIdx++);
 
-            if (inc.applicationSpecificInfo.equals(MasterData.NEW_ARE_SRE))
-                writeCell(row, 18, "x", null);
+                // O resto do seu código de escrita continua igual...
+                writeCell(row, 1, inc.number, null);
+                writeCell(row, 8, inc.openedBy, null);
+                writeCell(row, 9, inc.shortDescription, null);
+                writeCell(row, 11, inc.applicationSpecificInfo, null);
+                writeCell(row, 12, inc.opened, dateStyle);
+                writeCell(row, 13, inc.priority, null);
+                writeCell(row, 14, inc.state, null);
+                writeCell(row, 17, inc.description, null);
 
-            if (inc.applicationSpecificInfo.equals(MasterData.NEW_ARE_BUZ))
-                writeCell(row, 19, "x", null);
+                if (inc.applicationSpecificInfo.equals(MasterData.NEW_ARE_SRE))
+                    writeCell(row, 18, "x", null);
 
-            List<String> ignoreNumbers = ignoreNumbers();
-            if(ignoreNumbers.contains(inc.number))
-                writeCell(row, 20, "Ignore", null);
+                if (inc.applicationSpecificInfo.equals(MasterData.NEW_ARE_BUZ))
+                    writeCell(row, 19, "x", null);
+            }
+
 
         }
-
-
-
     }
 
     public List<String> ignoreNumbers() {
@@ -77,10 +81,13 @@ public class ExcelWriter {
                 "INC44247133",
                 "INC44233598",
                 "INC43708822",
-                "INC44567943"
+                "INC44567943",
+                "INC44599000",
+                "INC44607997",
+                "INC44537940",
+                "INC44556908"
         );
     }
-
 
 
     private void writeHeader(XSSFWorkbook wb, Sheet sheet) {
